@@ -1,40 +1,23 @@
-def split_on(lst, delimiter = ''):
-    splitted = [[]]
-    for item in lst:
-        if item == delimiter:
-            splitted.append([])
-        else:
-            splitted[-1].append(item)
-    return splitted
-
-with open('cookbook.txt') as f:
-      array = [row.strip() for row in f]
-      array = split_on(array)
-      cook_book = {}
-      for dish in array:
-        name = dish[0]
-        cook_book[name] = None
-        num_ingridients = int(dish[1])
-        ingridient_list = []
-        cookbook_ingridients_list = []
-        for ing in range(2,num_ingridients+2):
-          ingridient = dish[ing]
-          ingridient_list.append(ingridient)
-        cookbook_ingridients_new_list = []
-        for ingridient1 in ingridient_list:
-          ingridient1 = ingridient1.split(' | ')
-          cookbook_ingridients_new_list.append(ingridient1)
-        cookbook_list = []
-        for ingridient in cookbook_ingridients_new_list:
-          ingridient_dictionary = {}
-          ingridient_dictionary.update({'ingridient_name': ingridient[0]})
-          ingridient_dictionary.update({'quantity': int(ingridient[1])})
-          ingridient_dictionary.update({'measure': ingridient[2]})
-          cookbook_list.append(ingridient_dictionary)
-          cook_book[name] = cookbook_list
-
+def read_cookbook():
+    with open("cookbook.txt") as f:
+        cook_book = {}
+        for line in f:
+            dish = line.strip()
+            num_ingridients = f.readline()
+            ingridient_list = []
+            for num in range(0,int(num_ingridients)):
+                ingridient_dictionary = {}
+                ingridient = f.readline()
+                ingridient = ingridient.split(' | ')
+                ingridient_dictionary['ingridient_name'] = ingridient[0].strip()
+                ingridient_dictionary['quantity'] = int(ingridient[1])
+                ingridient_dictionary['measure'] = ingridient[2].strip()
+                ingridient_list.append(ingridient_dictionary)
+            cook_book[dish] = ingridient_list
+    return cook_book
 
 def get_shop_list_by_dishes(dishes, person_count):
+    cook_book = read_cookbook()
     shop_list = {}
     for dish in dishes:
         for ingridient in cook_book[dish]:
